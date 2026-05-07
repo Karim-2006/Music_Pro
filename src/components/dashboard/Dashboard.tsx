@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CloudRain, Clock, Smile, Headset, Play, MoreHorizontal, TrendingUp, TrendingDown, Heart, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMoodStore, MoodType } from "@/store/useMoodStore";
-import { getAIRecommendation, Recommendation, getMoodInsight, getTrendingTracks } from "@/lib/services";
+import { getAIRecommendation, Recommendation, getMoodInsight, getTrendingTracks, initializeLibrary } from "@/lib/services";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { Track } from "@/lib/mockData";
 
@@ -53,6 +53,7 @@ export default function Dashboard() {
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
+      await initializeLibrary();
       const [rec, trending] = await Promise.all([
         getAIRecommendation(currentMood, currentActivity),
         getTrendingTracks()

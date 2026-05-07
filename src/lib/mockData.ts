@@ -2,11 +2,14 @@ export interface Track {
   id: string;
   title: string;
   artist: string;
+  album?: string;
   albumArt: string;
   duration: number;
   url: string;
   genre: string;
   mood: string[];
+  language: 'Hindi' | 'English';
+  popularity: number; // 0-100
 }
 
 export interface Artist {
@@ -15,6 +18,7 @@ export interface Artist {
   image: string;
   followers: string;
   genres: string[];
+  popularity: number;
 }
 
 export interface Playlist {
@@ -34,7 +38,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 156, 
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', 
     genre: 'Lo-Fi', 
-    mood: ['Chill', 'Rainy Mood'] 
+    mood: ['Chill', 'Rainy Mood'],
+    language: 'English',
+    popularity: 85
   },
   { 
     id: '2', 
@@ -44,7 +50,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 422, 
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', 
     genre: 'Synthwave', 
-    mood: ['Energetic', 'Night Drive'] 
+    mood: ['Energetic', 'Night Drive'],
+    language: 'English',
+    popularity: 78
   },
   { 
     id: '3', 
@@ -54,7 +62,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 362, 
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', 
     genre: 'Ambient', 
-    mood: ['Focus'] 
+    mood: ['Focus'],
+    language: 'English',
+    popularity: 92
   },
   { 
     id: '4', 
@@ -64,7 +74,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 311, 
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', 
     genre: 'Pop', 
-    mood: ['Happy'] 
+    mood: ['Happy'],
+    language: 'English',
+    popularity: 88
   },
   { 
     id: '5', 
@@ -74,7 +86,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 245, 
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3', 
     genre: 'Acoustic', 
-    mood: ['Sad'] 
+    mood: ['Sad'],
+    language: 'English',
+    popularity: 65
   },
   { 
     id: '6', 
@@ -84,7 +98,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 280, 
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3', 
     genre: 'Jazz', 
-    mood: ['Romantic'] 
+    mood: ['Romantic'],
+    language: 'English',
+    popularity: 72
   },
   {
     id: '7',
@@ -94,7 +110,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 215,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',
     genre: 'Synthwave',
-    mood: ['Energetic', 'Focus']
+    mood: ['Energetic', 'Focus'],
+    language: 'English',
+    popularity: 81
   },
   {
     id: '8',
@@ -104,7 +122,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 480,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
     genre: 'Ambient',
-    mood: ['Peaceful', 'Focus']
+    mood: ['Peaceful', 'Focus'],
+    language: 'English',
+    popularity: 89
   },
   {
     id: '9',
@@ -114,7 +134,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 195,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',
     genre: 'Hip Hop',
-    mood: ['Energetic', 'Confident']
+    mood: ['Energetic', 'Confident'],
+    language: 'English',
+    popularity: 75
   },
   {
     id: '10',
@@ -124,7 +146,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 230,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',
     genre: 'Reggae',
-    mood: ['Happy', 'Chill']
+    mood: ['Happy', 'Chill'],
+    language: 'English',
+    popularity: 83
   },
   {
     id: '11',
@@ -134,7 +158,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 310,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3',
     genre: 'Cyberpunk',
-    mood: ['Night Drive', 'Dark']
+    mood: ['Night Drive', 'Dark'],
+    language: 'English',
+    popularity: 79
   },
   {
     id: '12',
@@ -144,7 +170,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 275,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3',
     genre: 'Soul',
-    mood: ['Happy', 'Romantic']
+    mood: ['Happy', 'Romantic'],
+    language: 'English',
+    popularity: 87
   },
   {
     id: '13',
@@ -154,7 +182,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 410,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-13.mp3',
     genre: 'Classical',
-    mood: ['Elegant', 'Peaceful']
+    mood: ['Elegant', 'Peaceful'],
+    language: 'English',
+    popularity: 91
   },
   {
     id: '14',
@@ -164,7 +194,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 600,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-14.mp3',
     genre: 'Ambient',
-    mood: ['Rainy Mood', 'Focus']
+    mood: ['Rainy Mood', 'Focus'],
+    language: 'English',
+    popularity: 94
   },
   {
     id: '15',
@@ -174,7 +206,9 @@ export const MOCK_TRACKS: Track[] = [
     duration: 345,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3',
     genre: 'Cinematic',
-    mood: ['Epic', 'Inspirational']
+    mood: ['Epic', 'Inspirational'],
+    language: 'English',
+    popularity: 88
   },
   {
     id: '16',
@@ -184,19 +218,22 @@ export const MOCK_TRACKS: Track[] = [
     duration: 290,
     url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3',
     genre: 'Jazz',
-    mood: ['Chill', 'Focus']
+    mood: ['Chill', 'Focus'],
+    language: 'English',
+    popularity: 76
   }
 ];
 
 export const MOCK_ARTISTS: Artist[] = [
-  { id: 'a1', name: 'LoFi Girl', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=LoFi', followers: '12M', genres: ['Lo-Fi', 'Ambient'] },
-  { id: 'a2', name: 'Synthwave Pro', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Synth', followers: '800K', genres: ['Synthwave', 'Electronic'] },
-  { id: 'a3', name: 'Focus Flow', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Focus', followers: '1.5M', genres: ['Ambient', 'Classical'] },
-  { id: 'a4', name: 'The Weeknd', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Weeknd', followers: '50M', genres: ['Pop', 'R&B'] },
-  { id: 'a5', name: 'Miley Cyrus', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Miley', followers: '30M', genres: ['Pop', 'Rock'] },
-  { id: 'a6', name: 'Smooth Jazz', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jazz', followers: '2M', genres: ['Jazz', 'Blues'] },
-  { id: 'a7', name: 'Nature Sounds', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nature', followers: '5M', genres: ['Ambient', 'Nature'] },
+  { id: 'a1', name: 'LoFi Girl', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=LoFi', followers: '12M', genres: ['Lo-Fi', 'Ambient'], popularity: 95 },
+  { id: 'a2', name: 'Synthwave Pro', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Synth', followers: '800K', genres: ['Synthwave', 'Electronic'], popularity: 82 },
+  { id: 'a3', name: 'Focus Flow', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Focus', followers: '1.5M', genres: ['Ambient', 'Classical'], popularity: 88 },
+  { id: 'a4', name: 'The Weeknd', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Weeknd', followers: '50M', genres: ['Pop', 'R&B'], popularity: 99 },
+  { id: 'a5', name: 'Miley Cyrus', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Miley', followers: '30M', genres: ['Pop', 'Rock'], popularity: 94 },
+  { id: 'a6', name: 'Smooth Jazz', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Jazz', followers: '2M', genres: ['Jazz', 'Blues'], popularity: 75 },
+  { id: 'a7', name: 'Nature Sounds', image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nature', followers: '5M', genres: ['Ambient', 'Nature'], popularity: 85 },
 ];
+
 
 export const MOCK_PLAYLISTS: Playlist[] = [
   { id: 'p1', name: 'Late Night Coding', description: 'Deep house and synthwave for high focus.', image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=400&fit=crop', tracks: MOCK_TRACKS.slice(0, 8) },

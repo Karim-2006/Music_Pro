@@ -1,5 +1,20 @@
 import { MoodType, ActivityType } from "@/store/useMoodStore";
 import { MOCK_TRACKS, MOCK_ARTISTS, MOCK_PLAYLISTS, Track, Artist, Playlist } from "./mockData";
+import { MusicLibraryManager } from "./musicLibraryManager";
+import { SpotifyService } from "./spotifyService";
+
+// Initialize Expanded Library
+const manager = MusicLibraryManager.getInstance();
+const spotify = new SpotifyService();
+
+// Load initial mock data
+MOCK_TRACKS.forEach(t => manager.addTrack(t));
+MOCK_ARTISTS.forEach(a => manager.addArtist(a));
+
+// Auto-expand with 1,000 songs on initialization
+export async function initializeLibrary() {
+  await spotify.bulkImport();
+}
 
 export interface Recommendation {
   id: string;
@@ -13,39 +28,41 @@ export interface Recommendation {
 export async function getAIRecommendation(mood: MoodType, activity: ActivityType): Promise<Recommendation> {
   await new Promise(resolve => setTimeout(resolve, 800));
   
+  const allTracks = manager.getTracks();
   // Find a track that matches the mood
-  const matchingTrack = MOCK_TRACKS.find(t => t.mood.includes(mood)) || MOCK_TRACKS[0];
+  const matchingTrack = allTracks.find(t => t.mood.includes(mood)) || allTracks[0];
   
   return {
     id: matchingTrack.id,
     title: matchingTrack.title,
     artist: matchingTrack.artist,
     albumArt: matchingTrack.albumArt,
-    tags: matchingTrack.mood.concat([matchingTrack.genre]),
-    description: `Perfect ${matchingTrack.genre} blend for your ${mood.toLowerCase()} mood while ${activity.toLowerCase()}.`
+    tags: matchingTrack.mood.concat([matchingTrack.genre, matchingTrack.language]),
+    description: `Perfect ${matchingTrack.genre} blend in ${matchingTrack.language} for your ${mood.toLowerCase()} mood while ${activity.toLowerCase()}.`
   };
 }
 
 export async function searchMusic(query: string) {
   await new Promise(resolve => setTimeout(resolve, 300));
   const q = query.toLowerCase();
+  const allTracks = manager.getTracks();
+  const allArtists = manager.getArtists();
   
   return {
-    tracks: MOCK_TRACKS.filter(t => t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q)),
-    artists: MOCK_ARTISTS.filter(a => a.name.toLowerCase().includes(q)),
+    tracks: allTracks.filter(t => t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q)),
+    artists: allArtists.filter(a => a.name.toLowerCase().includes(q)),
     playlists: MOCK_PLAYLISTS.filter(p => p.name.toLowerCase().includes(q))
   };
 }
 
 export async function getTrendingTracks(): Promise<Track[]> {
   await new Promise(resolve => setTimeout(resolve, 600));
-  // Simulate some randomness for "real-time" feel
-  return [...MOCK_TRACKS].sort(() => Math.random() - 0.5).slice(0, 10);
+  return manager.getTrendingTracks(10);
 }
 
 export async function getMoodTracks(mood: MoodType): Promise<Track[]> {
   await new Promise(resolve => setTimeout(resolve, 500));
-  return MOCK_TRACKS.filter(t => t.mood.includes(mood));
+  return manager.getTracksByGenre(mood) || manager.getTracks().filter(t => t.mood.includes(mood));
 }
 
 export async function getFeaturedArtists(): Promise<Artist[]> {
