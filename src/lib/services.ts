@@ -45,12 +45,32 @@ export async function getAIRecommendation(mood: MoodType, activity: ActivityType
 export async function searchMusic(query: string) {
   await new Promise(resolve => setTimeout(resolve, 300));
   const q = query.toLowerCase();
+  
+  // Ensure library is initialized if not already
   const allTracks = manager.getTracks();
   const allArtists = manager.getArtists();
   
+  // If library is empty, we might need to wait for initialization
+  if (allTracks.length === 0) {
+    console.log("Search: Library empty, waiting for initialization...");
+    await initializeLibrary();
+  }
+
+  const tracks = manager.getTracks().filter(t => 
+    t.title.toLowerCase().includes(q) || 
+    t.artist.toLowerCase().includes(q) ||
+    t.genre.toLowerCase().includes(q) ||
+    t.language.toLowerCase().includes(q)
+  );
+
+  const artists = manager.getArtists().filter(a => 
+    a.name.toLowerCase().includes(q) ||
+    a.genres.some(g => g.toLowerCase().includes(q))
+  );
+  
   return {
-    tracks: allTracks.filter(t => t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q)),
-    artists: allArtists.filter(a => a.name.toLowerCase().includes(q)),
+    tracks: tracks.slice(0, 20),
+    artists: artists.slice(0, 10),
     playlists: MOCK_PLAYLISTS.filter(p => p.name.toLowerCase().includes(q))
   };
 }

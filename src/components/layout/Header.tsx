@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Search, Bell, Crown, Command, Smile, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import MoodSelector from "../dashboard/MoodSelector";
@@ -13,8 +13,19 @@ export default function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const { toggleSidebar } = useUIStore();
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setShowSearch(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   return (
-    <header className="h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 z-10 bg-background/20 backdrop-blur-sm">
+    <header className="h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 z-[100] bg-background/20 backdrop-blur-sm">
       <AnimatePresence>
         {showMoodSelector && <MoodSelector onClose={() => setShowMoodSelector(false)} />}
         {showSearch && <SearchOverlay onClose={() => setShowSearch(false)} />}
