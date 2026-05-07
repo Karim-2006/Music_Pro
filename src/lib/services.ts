@@ -38,14 +38,23 @@ export async function searchMusic(query: string) {
 }
 
 export async function getTrendingTracks(): Promise<Track[]> {
-  return MOCK_TRACKS.slice(0, 5);
+  await new Promise(resolve => setTimeout(resolve, 600));
+  // Simulate some randomness for "real-time" feel
+  return [...MOCK_TRACKS].sort(() => Math.random() - 0.5).slice(0, 10);
+}
+
+export async function getMoodTracks(mood: MoodType): Promise<Track[]> {
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return MOCK_TRACKS.filter(t => t.mood.includes(mood));
 }
 
 export async function getFeaturedArtists(): Promise<Artist[]> {
+  await new Promise(resolve => setTimeout(resolve, 400));
   return MOCK_ARTISTS;
 }
 
 export async function getPlaylists(): Promise<Playlist[]> {
+  await new Promise(resolve => setTimeout(resolve, 700));
   return MOCK_PLAYLISTS;
 }
 

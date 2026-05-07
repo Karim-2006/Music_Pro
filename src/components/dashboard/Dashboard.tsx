@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { CloudRain, Clock, Smile, Headset, Play, MoreHorizontal, TrendingUp, TrendingDown, Heart, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMoodStore, MoodType } from "@/store/useMoodStore";
-import { getAIRecommendation, Recommendation, getMoodInsight } from "@/lib/services";
+import { getAIRecommendation, Recommendation, getMoodInsight, getTrendingTracks } from "@/lib/services";
 import { usePlayerStore } from "@/store/usePlayerStore";
+import { Track } from "@/lib/mockData";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -41,24 +42,23 @@ const moods: { label: MoodType; listeners: string; icon: string; color: string }
   { label: "Workout", listeners: "11.2K", icon: "🏋️", color: "from-red-500/20 to-orange-500/20" },
 ];
 
-const trending = [
-  { rank: 1, title: "Blinding Lights", artist: "The Weeknd", trend: "up", img: "https://api.dicebear.com/7.x/shapes/svg?seed=1" },
-  { rank: 2, title: "Flowers", artist: "Miley Cyrus", trend: "up", img: "https://api.dicebear.com/7.x/shapes/svg?seed=2" },
-  { rank: 3, title: "As It Was", artist: "Harry Styles", trend: "down", img: "https://api.dicebear.com/7.x/shapes/svg?seed=3" },
-];
-
 export default function Dashboard() {
   const { currentMood, currentActivity, weather, setMood } = useMoodStore();
   const { setCurrentTrack, setIsPlaying } = usePlayerStore();
   const [recommendation, setRecommendation] = useState<Recommendation | null>(null);
   const [insight, setInsight] = useState("");
+  const [trendingTracks, setTrendingTracks] = useState<Track[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
-      const rec = await getAIRecommendation(currentMood, currentActivity);
+      const [rec, trending] = await Promise.all([
+        getAIRecommendation(currentMood, currentActivity),
+        getTrendingTracks()
+      ]);
       setRecommendation(rec);
+      setTrendingTracks(trending.slice(0, 5));
       setInsight(getMoodInsight(currentMood, currentActivity));
       setIsLoading(false);
     }
@@ -208,6 +208,45 @@ export default function Dashboard() {
           </AnimatePresence>
         </motion.section>
 
+        {/* Live Trending Section */}
+        <motion.section variants={itemVariants} className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-bold flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-primary" />
+              Live Trending
+            </h3>
+            <button className="text-xs text-primary font-bold uppercase tracking-wider hover:underline">View All</button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {trendingTracks.map((track, idx) => (
+              <motion.div 
+                key={track.id}
+                whileHover={{ x: 5 }}
+                className="flex items-center gap-4 p-3 rounded-2xl glass-card hover:bg-white/5 transition-all group cursor-pointer"
+                onClick={() => {
+                  setCurrentTrack(track);
+                  setIsPlaying(true);
+                }}
+              >
+                <div className="relative shrink-0">
+                  <img src={track.albumArt} className="w-12 h-12 rounded-xl object-cover" alt={track.title} />
+                  <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-xl">
+                    <Play className="w-5 h-5 fill-current" />
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold text-sm truncate group-hover:text-primary transition-colors">{track.title}</p>
+                  <p className="text-xs text-gray-500 truncate">{track.artist}</p>
+                </div>
+                <div className="text-right flex flex-col items-end gap-1">
+                  <span className="text-[10px] font-bold text-gray-400">#{(idx + 1).toString().padStart(2, '0')}</span>
+                  <TrendingUp className="w-3 h-3 text-emerald-500" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.section>
+
         {/* Popular Moods */}
         <motion.section variants={itemVariants}>
           <div className="flex items-center justify-between mb-4 md:mb-6">
@@ -309,23 +348,23 @@ export default function Dashboard() {
             <button className="text-[10px] font-bold text-primary uppercase tracking-widest">View all</button>
           </div>
           <div className="space-y-4">
-            {trending.map((item, idx) => (
+            {trendingTracks.slice(0, 3).map((track, idx) => (
               <motion.div 
-                key={item.rank} 
+                key={track.id} 
                 whileHover={{ x: 5 }}
                 className="flex items-center gap-4 group cursor-pointer"
+                onClick={() => {
+                  setCurrentTrack(track);
+                  setIsPlaying(true);
+                }}
               >
-                <span className="text-sm font-bold text-gray-600 w-4">{item.rank}</span>
-                <img src={item.img} className="w-10 h-10 rounded-lg" />
+                <span className="text-sm font-bold text-gray-600 w-4">{idx + 1}</span>
+                <img src={track.albumArt} className="w-10 h-10 rounded-lg" />
                 <div className="flex-1">
-                  <p className="text-xs font-bold group-hover:text-primary transition-colors truncate">{item.title}</p>
-                  <p className="text-[10px] text-gray-500">{item.artist}</p>
+                  <p className="text-xs font-bold group-hover:text-primary transition-colors truncate">{track.title}</p>
+                  <p className="text-[10px] text-gray-500">{track.artist}</p>
                 </div>
-                {item.trend === "up" ? (
-                  <TrendingUp className="w-4 h-4 text-green-500" />
-                ) : (
-                  <TrendingDown className="w-4 h-4 text-red-500" />
-                )}
+                <TrendingUp className="w-4 h-4 text-green-500" />
               </motion.div>
             ))}
           </div>

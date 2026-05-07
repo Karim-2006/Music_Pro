@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { motion } from "framer-motion";
 import { useMoodStore, MoodType } from "@/store/useMoodStore";
 import { cn } from "@/lib/utils";
+import { getMoodTracks } from "@/lib/services";
+import { Track } from "@/lib/mockData";
+import TrackList from "@/components/ui/TrackList";
+import { Loader2 } from "lucide-react";
 
 const moods: { label: MoodType; icon: string; description: string; color: string; bg: string }[] = [
   { label: "Chill", icon: "🍃", description: "Soft, relaxing beats to unwind", color: "from-teal-500 to-emerald-500", bg: "bg-teal-500/10" },
@@ -21,6 +25,18 @@ const moods: { label: MoodType; icon: string; description: string; color: string
 
 export default function MoodPage() {
   const { currentMood, setMood } = useMoodStore();
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function fetchMoodTracks() {
+      setLoading(true);
+      const t = await getMoodTracks(currentMood);
+      setTracks(t);
+      setLoading(false);
+    }
+    fetchMoodTracks();
+  }, [currentMood]);
 
   return (
     <PageLayout>
@@ -94,6 +110,24 @@ export default function MoodPage() {
                <div className="absolute -inset-4 bg-primary/20 blur-2xl -z-10 animate-pulse" />
             </div>
           </div>
+        </section>
+
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Curated for your {currentMood} Mood</h2>
+            {loading && <Loader2 className="w-5 h-5 text-primary animate-spin" />}
+          </div>
+          {tracks.length > 0 ? (
+             <TrackList 
+               tracks={tracks} 
+               title={`${currentMood} Collection`} 
+               description={`Specially picked tracks for your ${currentMood.toLowerCase()} mood.`}
+             />
+           ) : !loading && (
+            <div className="glass-panel p-12 text-center text-gray-500">
+              No tracks found for this mood yet. Try another one!
+            </div>
+          )}
         </section>
       </div>
     </PageLayout>

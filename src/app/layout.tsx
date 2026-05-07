@@ -5,8 +5,31 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "MoodBeats | AI-Powered Mood Music",
-  description: "Experience music that matches your soul. AI-generated playlists based on mood, weather, and activity.",
+  title: "MoodBeats | AI-Powered Mood Music & Personal Playlists",
+  description: "Experience music that matches your soul. AI-generated playlists based on mood, weather, and activity. Your ultimate companion for focus, relaxation, and energy.",
+  keywords: ["music", "AI", "mood", "playlists", "streaming", "lofi", "focus music", "workout music"],
+  authors: [{ name: "Arjun" }],
+  openGraph: {
+    title: "MoodBeats | AI-Powered Mood Music",
+    description: "Experience music that matches your soul. AI-generated playlists based on mood, weather, and activity.",
+    url: "https://moodbeats.pro",
+    siteName: "MoodBeats",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MoodBeats | AI-Powered Mood Music",
+    description: "Experience music that matches your soul. AI-generated playlists based on mood, weather, and activity.",
+    images: ["/og-image.png"],
+  },
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

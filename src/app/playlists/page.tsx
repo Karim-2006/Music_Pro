@@ -1,12 +1,37 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { motion } from "framer-motion";
-import { MOCK_PLAYLISTS } from "@/lib/mockData";
-import { Plus, ListMusic, Play } from "lucide-react";
+import { Playlist } from "@/lib/mockData";
+import { Plus, ListMusic, Play, Loader2 } from "lucide-react";
+import { getPlaylists } from "@/lib/services";
 
 export default function PlaylistsPage() {
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPlaylists() {
+      setLoading(true);
+      const p = await getPlaylists();
+      setPlaylists(p);
+      setLoading(false);
+    }
+    fetchPlaylists();
+  }, []);
+
+  if (loading) {
+    return (
+      <PageLayout>
+        <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
+          <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          <p className="text-gray-500 font-medium animate-pulse">Opening your music vaults...</p>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
     <PageLayout>
       <div className="space-y-12 py-4">
@@ -22,7 +47,7 @@ export default function PlaylistsPage() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {MOCK_PLAYLISTS.map((playlist, idx) => (
+          {playlists.map((playlist, idx) => (
             <motion.div
               key={playlist.id}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -53,7 +78,7 @@ export default function PlaylistsPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: MOCK_PLAYLISTS.length * 0.1 }}
+            transition={{ delay: playlists.length * 0.1 }}
             className="aspect-square rounded-3xl border-2 border-dashed border-white/10 flex flex-col items-center justify-center gap-4 hover:border-primary/50 hover:bg-white/5 transition-all cursor-pointer group"
           >
             <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-primary/20 transition-all">

@@ -3,24 +3,49 @@
 import React, { useEffect, useState } from "react";
 import PageLayout from "@/components/layout/PageLayout";
 import { motion } from "framer-motion";
-import { MOCK_TRACKS, MOCK_ARTISTS, MOCK_PLAYLISTS, Track, Artist, Playlist } from "@/lib/mockData";
-import { Play, Heart, MoreHorizontal, User } from "lucide-react";
+import { Track, Artist, Playlist } from "@/lib/mockData";
+import { Play, Heart, MoreHorizontal, User, Loader2 } from "lucide-react";
 import { usePlayerStore } from "@/store/usePlayerStore";
+import { getFeaturedArtists, getPlaylists, getTrendingTracks } from "@/lib/services";
 
 export default function ExplorePage() {
   const { setCurrentTrack, setIsPlaying } = usePlayerStore();
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [artists, setArtists] = useState<Artist[]>([]);
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      const [t, a, p] = await Promise.all([
+        getTrendingTracks(),
+        getFeaturedArtists(),
+        getPlaylists()
+      ]);
+      setTracks(t);
+      setArtists(a);
+      setPlaylists(p);
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
   
   const handlePlay = (track: Track) => {
-    setCurrentTrack({
-      id: track.id,
-      title: track.title,
-      artist: track.artist,
-      albumArt: track.albumArt,
-      duration: track.duration,
-      url: track.url
-    });
+    setCurrentTrack(track);
     setIsPlaying(true);
   };
+
+  if (loading) {
+    return (
+      <PageLayout>
+        <div className="h-[60vh] flex flex-col items-center justify-center gap-4">
+          <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          <p className="text-gray-500 font-medium animate-pulse">Exploring the musical universe...</p>
+        </div>
+      </PageLayout>
+    );
+  }
 
   return (
     <PageLayout>
@@ -28,7 +53,7 @@ export default function ExplorePage() {
         <section>
           <h1 className="text-4xl font-bold mb-8">Explore Music</h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {MOCK_PLAYLISTS.map((playlist, idx) => (
+            {playlists.map((playlist, idx) => (
               <motion.div
                 key={playlist.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -52,7 +77,7 @@ export default function ExplorePage() {
         <section>
           <h2 className="text-2xl font-bold mb-6">Trending Artists</h2>
           <div className="flex gap-8 overflow-x-auto pb-4 scroll-hide">
-            {MOCK_ARTISTS.map((artist, idx) => (
+            {artists.map((artist, idx) => (
               <motion.div
                 key={artist.id}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -78,7 +103,7 @@ export default function ExplorePage() {
         <section>
           <h2 className="text-2xl font-bold mb-6">New Releases</h2>
           <div className="space-y-2">
-            {MOCK_TRACKS.map((track, idx) => (
+            {tracks.map((track, idx) => (
               <motion.div
                 key={track.id}
                 initial={{ opacity: 0, x: -20 }}
