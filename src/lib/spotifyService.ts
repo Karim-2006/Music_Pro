@@ -5,13 +5,77 @@ import { MusicLibraryManager } from './musicLibraryManager';
 export class SpotifyService {
   private clientId: string = process.env.SPOTIFY_CLIENT_ID || '';
   private clientSecret: string = process.env.SPOTIFY_CLIENT_SECRET || '';
+  private rapidApiKey: string = process.env.NEXT_PUBLIC_RAPIDAPI_KEY || '';
+  private rapidApiHost: string = process.env.NEXT_PUBLIC_RAPIDAPI_HOST || 'spotify23.p.rapidapi.com';
   private accessToken: string | null = null;
 
   /**
-   * Simulates fetching 1,000 songs with realistic metadata.
-   * In a real implementation, this would iterate through Spotify's 'Browse' or 'Search' endpoints.
+   * Fetches real tracks from Spotify via RapidAPI if key is provided,
+   * otherwise falls back to simulated data.
    */
   public async fetchPopularTracks(count: number = 1000): Promise<Track[]> {
+    if (this.rapidApiKey && this.rapidApiKey !== 'your_rapidapi_key_here') {
+      try {
+        console.log('Fetching real data from Spotify RapidAPI...');
+        return await this.fetchFromRapidAPI(count);
+      } catch (error) {
+        console.error('RapidAPI fetch failed, falling back to simulation:', error);
+      }
+    }
+    
+    return this.generateSimulatedTracks(count);
+  }
+
+  private async fetchFromRapidAPI(count: number): Promise<Track[]> {
+    const tracks: Track[] = [];
+    const searchQueries = ['Hindi Hits 2024', 'English Top Hits', 'Shape of You', 'Arijit Singh Best', 'The Weeknd'];
+    
+    for (const query of searchQueries) {
+      if (tracks.length >= count) break;
+
+      const options = {
+        method: 'GET',
+        url: `https://${this.rapidApiHost}/search/`,
+        params: {
+          q: query,
+          type: 'tracks',
+          offset: '0',
+          limit: '50',
+          numberOfTopResults: '5'
+        },
+        headers: {
+          'x-rapidapi-key': this.rapidApiKey,
+          'x-rapidapi-host': this.rapidApiHost
+        }
+      };
+
+      const response = await axios.request(options);
+      const items = response.data.tracks?.items || [];
+
+      items.forEach((item: any) => {
+        const trackData = item.data;
+        if (!trackData) return;
+
+        tracks.push({
+          id: trackData.id,
+          title: trackData.name,
+          artist: trackData.artists.items[0]?.profile.name || 'Unknown Artist',
+          album: trackData.albumOfTrack.name,
+          albumArt: trackData.albumOfTrack.coverArt.sources[0]?.url || '',
+          duration: Math.floor(trackData.duration.totalMilliseconds / 1000),
+          url: '', // RapidAPI usually doesn't provide direct MP3 links
+          genre: 'Popular',
+          mood: ['Chill'],
+          language: query.toLowerCase().includes('hindi') ? 'Hindi' : 'English',
+          popularity: 80
+        });
+      });
+    }
+
+    return tracks.slice(0, count);
+  }
+
+  private generateSimulatedTracks(count: number): Track[] {
     const tracks: Track[] = [];
     
     // Popular English Hits Data Seeds
