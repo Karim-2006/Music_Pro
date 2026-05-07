@@ -25,7 +25,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 z-[100] bg-background/20 backdrop-blur-sm">
+    <header className="h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 z-[120] bg-[#020617]/80 backdrop-blur-xl border-b border-white/5">
       <AnimatePresence>
         {showMoodSelector && <MoodSelector onClose={() => setShowMoodSelector(false)} />}
         {showSearch && <SearchOverlay onClose={() => setShowSearch(false)} />}

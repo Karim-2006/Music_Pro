@@ -62,7 +62,7 @@ export default function Sidebar() {
       />
 
       <aside className={cn(
-        "fixed lg:sticky top-0 left-0 z-[70] w-64 h-screen flex flex-col bg-black/40 backdrop-blur-xl border-r border-white/10 p-6 transition-transform duration-300 lg:translate-x-0 overflow-y-auto scroll-hide",
+        "fixed lg:sticky top-0 left-0 z-[150] w-64 h-screen flex flex-col bg-black backdrop-blur-3xl border-r border-white/10 p-6 transition-transform duration-300 lg:translate-x-0 overflow-y-auto scroll-hide pb-32 md:pb-6",
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex items-center justify-between mb-10 px-2">

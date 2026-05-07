@@ -81,7 +81,11 @@ export default function Dashboard() {
         artist: recommendation.artist,
         albumArt: recommendation.albumArt,
         duration: 225,
-        url: ""
+        url: "",
+        genre: recommendation.tags[0] || "Unknown",
+        mood: recommendation.tags.slice(0, 2),
+        language: "English",
+        popularity: 80
       });
       setIsPlaying(true);
     }

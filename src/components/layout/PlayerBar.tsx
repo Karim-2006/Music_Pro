@@ -24,7 +24,7 @@ export default function PlayerBar() {
   if (!currentTrack) return null;
 
   return (
-    <footer className="h-20 md:h-24 bg-black/60 backdrop-blur-2xl border-t border-white/10 px-4 md:px-6 flex items-center justify-between fixed bottom-0 left-0 right-0 z-50">
+    <footer className="h-20 md:h-24 bg-black/60 backdrop-blur-2xl border-t border-white/10 px-4 md:px-6 flex items-center justify-between fixed bottom-16 lg:bottom-0 left-0 right-0 z-50">
       {/* Current Track Info */}
       <div className="flex items-center gap-3 md:gap-4 w-[40%] md:w-[30%]">
         <div className="w-10 h-10 md:w-14 md:h-14 rounded-lg overflow-hidden relative group cursor-pointer shadow-lg shadow-black/40 shrink-0">

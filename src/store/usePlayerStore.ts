@@ -1,13 +1,5 @@
 import { create } from 'zustand';
-
-interface Track {
-  id: string;
-  title: string;
-  artist: string;
-  albumArt: string;
-  duration: number;
-  url: string;
-}
+import { Track } from '@/lib/mockData';
 
 interface PlayerState {
   currentTrack: Track | null;
@@ -37,9 +29,12 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   setCurrentTrack: (track) => {
     const { audio } = get();
     if (audio) {
-      audio.src = track.url;
-      audio.play().catch(e => console.error("Error playing audio:", e));
-      set({ currentTrack: track, isPlaying: true, progress: 0 });
+      audio.pause();
+      audio.src = track.url || ''; // Ensure it's a string
+      if (track.url) {
+        audio.play().catch(e => console.error("Error playing audio:", e));
+      }
+      set({ currentTrack: track, isPlaying: !!track.url, progress: 0 });
       
       audio.ontimeupdate = () => {
         set({ progress: (audio.currentTime / audio.duration) * 100 });

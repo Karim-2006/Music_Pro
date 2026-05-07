@@ -29,14 +29,7 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
   }, [query]);
 
   const handlePlay = (track: Track) => {
-    setCurrentTrack({
-      id: track.id,
-      title: track.title,
-      artist: track.artist,
-      albumArt: track.albumArt,
-      duration: track.duration,
-      url: track.url
-    });
+    setCurrentTrack(track);
     setIsPlaying(true);
     onClose();
   };
@@ -46,7 +39,7 @@ export default function SearchOverlay({ onClose }: { onClose: () => void }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[100] bg-[#020617]/95 backdrop-blur-xl p-8 overflow-y-auto scroll-hide"
+      className="fixed inset-0 z-[200] bg-[#020617]/98 backdrop-blur-2xl p-8 overflow-y-auto scroll-hide"
     >
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-12 sticky top-0 bg-transparent z-10 py-4">
