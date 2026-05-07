@@ -1,0 +1,42 @@
+{
+  "name": "MoodBeats | AI-Powered Music",
+  "short_name": "MoodBeats",
+  "description": "Experience music that matches your soul. AI-generated playlists based on mood, weather, and activity.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#8B5CF6",
+  "icons": [
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Explore",
+      "url": "/explore",
+      "icons": [{ "src": "icons/explore.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Mood",
+      "url": "/mood",
+      "icons": [{ "src": "icons/mood.png", "sizes": "96x96" }]
+    }
+  ]
+}
