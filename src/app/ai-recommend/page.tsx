@@ -35,7 +35,11 @@ export default function AIRecommendPage() {
         artist: recommendation.artist,
         albumArt: recommendation.albumArt,
         duration: 225,
-        url: ""
+        url: "",
+        genre: recommendation.tags[0] || "AI Mix",
+        mood: recommendation.tags,
+        language: "English",
+        popularity: 90
       });
       setIsPlaying(true);
     }

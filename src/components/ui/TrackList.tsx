@@ -16,14 +16,7 @@ export default function TrackList({ tracks, title, description }: TrackListProps
   const { setCurrentTrack, setIsPlaying } = usePlayerStore();
 
   const handlePlay = (track: Track) => {
-    setCurrentTrack({
-      id: track.id,
-      title: track.title,
-      artist: track.artist,
-      albumArt: track.albumArt,
-      duration: track.duration,
-      url: track.url
-    });
+    setCurrentTrack(track);
     setIsPlaying(true);
   };
 
